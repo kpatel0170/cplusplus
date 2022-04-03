@@ -7,8 +7,8 @@
 //  FEATURES :                                       //
 //     * Object oriented programming.                //
 //     * File Handling with C++.                     //
-//													 //
-//  				By Kartik Patel					 //
+//						     //
+//  				By Kartik Patel	     //
 //                                                   //
 ///////////////////////////////////////////////////////
 
