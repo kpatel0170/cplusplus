@@ -13,8 +13,6 @@
 ///////////////////////////////////////////////////////
 
 // Programme Starts Here.
-
-
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -25,17 +23,20 @@
 #include <ctime>
 #include <stdlib.h>
 #include <bits/stdc++.h>
+#include <windows.h>
 
 using namespace std;
 int main_exit;
 
 void fordelay(int);
+void title(); 
 void close(void);
 int main();
 void menu_e();
 void employee();
 void customer();
 void menu_c();
+void retry(string person);
 
 class Bank
 {
@@ -92,23 +93,23 @@ void Bank::read_data()
 		} while(is.good());
     fflush(stdin);
     cout << "\nEnter Name: ";
-    getline(cin,name);
-    cout << "\nEnter the  of birth(mm/dd/yyyy):";
+    getline(cin, name);
+    cout << "\nEnter the  of birth(mm/dd/yyyy): ";
     fflush(stdin);
 	cin >> dob;
-    cout << "\nEnter the age:";
+    cout << "\nEnter the age: ";
     cin >> age;
-    cout << "\nEnter the address:";
+    cout << "\nEnter the address: ";
     fflush(stdin);
-	getline(cin,address);
+	getline(cin, address);
     cout << "\nEnter the phone number: ";
     fflush(stdin);
     cin >> phone;
-    cout << "\nYou want to deposit amount:\n\t1.Yes\n\t2.No\n:";
+    cout << "\nYou want to deposit amount:\n\t1.Yes\n\t2.No\n\t: ";
     cin >> x;
     if(x == 1)
     {
-    	cout<<"\nEnter the amount to deposit: Rs ";
+    	cout<<"\nEnter the amount to deposit: $ ";
 		cin>>depo;    	
 	}
 	else		depo = to_string(0);
@@ -128,31 +129,7 @@ void Bank::read_data()
     cin >> password;
     printf("\nAccount created successfully!");
 
-	login_try:
-       	cout << "\n\n\tEnter \n\t\t 1. Try Again! \n\t\t 2. Main Menu \n\t\t 0. Exit \n\t\t\t : ";
-        scanf("%d",&main_exit);
-		if (main_exit==1)
-		{
-			system("cls");
-			employee();
-		}
-		else if (main_exit==0)
-		{
-			system("cls");
-			close();
-		}
-		else if (main_exit == 2)
-		{
-			system("cls");
-			main();
-		}
-		else
-		{
-			printf("\nInvalid!");
-			fordelay(1000000000);
-			system("cls");
-			goto login_try;
-		}
+	retry("customer");
 }
 void Bank::acc_write()
 {
@@ -172,7 +149,7 @@ void Bank::modify_account()
 	int test = 0;
 	string acc_no;
 	cout << "For Verification:\n";
-	cout << "Enter the Account Number again:";
+	cout << "Enter the Account Number again: ";
 	cin >> acc_no;
 	ifstream is("Bank_Record.csv");
     do
@@ -234,7 +211,7 @@ void Bank::modify_account()
 					if (x == y)		ofile << z <<",";
 					else			ofile << x << ",";
 				}
-					break;
+				break;
 			case 2:
 				system("color 4");
 				cout << "\t\tUpdate dob Of Birth\n\n";
@@ -293,44 +270,18 @@ void Bank::modify_account()
 				break;
 			default: cout << "Invalid Input";
 			}
-			
 			remove("Bank_Record.csv");
 			rename("temp.csv","Bank_Record.csv");	
 			file.seekg(0, ios::beg);
 			ofile.seekp(0, ios::beg);
 			cout << "\n\n\t\tDo You Want Update Any Other Field : \n\t\t 1: YES \n\t\t 2: NO \n\t\t : ";
 			cin >> opt;
-		} while(opt!=2);
+		} while(opt != 2);
 		file.close();
 		ofile.close();
 	}
 	else		cout << "\n Account Doesn't Exist";
-	
-	login_try:
-       	cout << "\n\n\tEnter \n\t\t 1. Try Again! \n\t\t 2. Main Menu \n\t\t 0. Exit \n\t\t\t : ";
-        scanf("%d",&main_exit);
-		if (main_exit==1)
-		{
-			system("cls");
-			employee();
-		}
-		else if (main_exit==0)
-		{
-			system("cls");
-			close();
-		}
-		else if (main_exit == 2)
-		{
-			system("cls");
-			main();
-		}
-		else
-		{
-			printf("\nInvalid!");
-			fordelay(1000000000);
-			system("cls");
-			goto login_try;
-		}
+	retry("customer");
 }
 void Bank::search_rec()
 {
@@ -342,11 +293,11 @@ void Bank::search_rec()
     string acc_no, name_s;
     ifstream is("Bank_Record.csv");
     
-    cout << "Do you want to check by\n 1.Account no.\n 2.Name \n\t\t : ";
+    cout << "Do you want to check by\n <1> Account no.\n <2> Name \n\t\t : ";
     cin >> choice;
     if (choice == 1)
     {   
-		cout << "Enter the account number:";
+		cout << "Enter the account number: ";
         cin >> acc_no;
         do
         {
@@ -481,7 +432,7 @@ void Bank::search_rec()
 						t = date1 - atoi(doc.c_str());
 						rate = 15;
 						intrst=std::to_string(inter(t,amount,rate));						
-						cout<<"\n\nYou will get Rs " << intrst <<" as interest";
+						cout<<"\n\nYou will get $ " << intrst <<" as interest";
 						file.clear();
 						while (!file.eof())
 						{		
@@ -489,7 +440,7 @@ void Bank::search_rec()
     						if (x == interest)		ofile << intrst <<",";
     						else if(x == depo)
         					{
-        						y=(atoi(depo.c_str())+atoi(intrst.c_str()));
+        						y=(atoi(depo.c_str()) + atoi(intrst.c_str()));
         						ofile << y << ",";
 							}
 							else					ofile << x <<","; 
@@ -522,7 +473,7 @@ void Bank::search_rec()
 							else						ofile << x <<","; 
 						}
 					}	
-					else		cout<<"\n\nYou will get Rs 0 as interest for today...";
+					else		cout<<"\n\nYou will get $ 0 as interest for today...";
 					break;
 				}
             }
@@ -534,32 +485,7 @@ void Bank::search_rec()
     remove("Bank_Record.csv");
    	rename("temp.csv","Bank_Record.csv");	
 	is.close();
-
-	login_try:
-       	cout << "\n\n\tEnter \n\t\t 1. Try Again! \n\t\t 2. Main Menu \n\t\t 0. Exit \n\t\t\t : ";
-        scanf("%d",&main_exit);
-		if (main_exit==1)
-		{
-			system("cls");
-			employee();
-		}
-		else if (main_exit==0)
-		{
-			system("cls");
-			close();
-		}
-		else if (main_exit == 2)
-		{
-			system("cls");
-			main();
-		}
-		else
-		{
-			printf("\nInvalid!");
-			fordelay(1000000000);
-			system("cls");
-			goto login_try;
-		}
+	retry("customer");
 }
 void Bank::deposit_withdraw()
 {
@@ -568,7 +494,7 @@ void Bank::deposit_withdraw()
     ifstream file ("Bank_Record.csv" );
 	ofstream ofile ("temp.csv" );
 	Bank ac;
-	cout << "Enter the account number:";
+	cout << "Enter the account number: ";
 	cin >> acc_no;
     do
     {
@@ -645,33 +571,7 @@ void Bank::deposit_withdraw()
 	rename("temp.csv","Bank_Record.csv");
 
    	if(test==0) 	cout<<"\n\nRecord not found!!";
-
-	login_try:
-       	cout << "\n\n\tEnter \n\t\t 1. Try Again! \n\t\t 2. Main Menu \n\t\t 0. Exit \n\t\t\t : ";
-        scanf("%d",&main_exit);
-		
-		if (main_exit==1)
-		{
-			system("cls");
-			employee();
-		}
-		else if (main_exit==0)
-		{
-			system("cls");
-			close();
-		}
-		else if (main_exit == 2)
-		{
-			system("cls");
-			main();
-		}
-		else
-		{
-			printf("\nInvalid!");
-			fordelay(1000000000);
-			system("cls");
-			goto login_try;
-		}
+	retry("customer");
 }
 void Bank::display_all()
 {
@@ -715,33 +615,7 @@ void Bank::display_all()
 			 << amount <<"\t\t" << address << "\t\t" << phone << "\t\t" << date << endl;
 		if(sz == (sz1))		break;
 	}
-
-	login_try:
-       	cout << "\n\n\tEnter \n\t\t 1. Try Again! \n\t\t 2. Main Menu \n\t\t 0. Exit \n\t\t\t : ";
-        scanf("%d",&main_exit);
-		
-		if (main_exit==1)
-		{
-			system("cls");
-			employee();
-		}
-		else if (main_exit==0)
-		{
-			system("cls");
-			close();
-		}
-		else if (main_exit == 2)
-		{
-			system("cls");
-			main();
-		}
-		else
-		{
-			printf("\nInvalid!");
-			fordelay(1000000000);
-			system("cls");
-			goto login_try;
-		}
+	retry("customer");
 }
 void Bank::transfer()
 {
@@ -850,55 +724,46 @@ void Bank::transfer()
 	
 	if(test == 0)    	cout<<"\n\n\t\tAccount doesn't Exist!";
 	
-	login_try:
-       	cout << "\n\n\tEnter \n\t\t 1. Try Again! \n\t\t 2. Main Menu \n\t\t 0. Exit \n\t\t\t : ";
-        scanf("%d",&main_exit);
-		if (main_exit==1)
-		{
-			system("cls");
-			employee();
-		}
-		else if (main_exit==0)
-		{
-			system("cls");
-			close();
-		}
-		else if (main_exit == 2)
-		{
-			system("cls");
-			main();
-		}
-		else
-		{
-			printf("\nInvalid!");
-			fordelay(1000000000);
-			system("cls");
-			goto login_try;
-		}
+	retry("customer");
         		
 }
 
+// ->   A function in which there is a loop which runs 100000000 times, to make some delay.
 void fordelay(int j)
 {   int i,k;
     for(i = 0; i < j; i++)
         k = i;
 }
-
+// -> A function to display a message on closing the program.
 void close(void)
 {
-    printf("\n\n\n\nThis Program is Closed... Thank You");
+	cout << "\n\n\t\t\t Loading";
+	for(int i = 0; i < 6; i++)
+    {
+        fordelay(100000000);
+        printf(".");
+    }
+	system("cls");
+	system("color 7");
+	title();
+    printf("\n\n\t\t\tThis Program is Closed...Thank You\n\n\n\n\n\n");
 }
-
+// -> It provide access to the employee menu after inputting correct Employee Id and Password.
 void employee()
 {
 	char pass[10];
     char c;
     string s, name;
     int i=0;
-    cout << "\n\n\t\t For Security Purpose:\n";
-    cout << "\n\t\t Enter the Login Emplyoee Id: ";
+    system("cls");
+    system("color D");
+	title();
+	cout << "\n\t\t\t\t BANK RECORD SYSTEM";
+    cout << "\n\n\t\t\t\t EMPLOYEE PORTAL\n";
+    cout << "\n\n\t\t For Security Reasons\n";
+    cout << "\n\t\t Enter your userneme: ";
     cin >> name;
-    cout << "\n\t\t Enter the password to login: ";
+    cout << "\n\t\t Enter the password: ";
 	while(1)
 	{
     	c=getch();
@@ -911,6 +776,7 @@ void employee()
     
 	if(s == "0170" && name == "Kartik")
     {
+		system("color A");
 		printf("\n\n Access Granted!\n LOADING");
 	   	for(i=0;i<=6;i++)
        	{
@@ -921,264 +787,245 @@ void employee()
         menu_e();
     }
     else
-    {   	printf("\n\n Wrong password or Emplyoee Id!!");
-		
-		login_try:
-           	cout << "\n\n\tEnter \n\t\t 1. Try Again! \n\t\t 2. Main Menu \n\t\t 0. Exit \n\t\t\t : ";
-            scanf("%d",&main_exit);
-			
-			if (main_exit==1)
-			{
-				system("cls");
-				employee();
-			}
-			else if (main_exit==0)
-			{
-				system("cls");
-				close();
-			}
-			else if (main_exit == 2)
-			{
-				system("cls");
-				main();
-			}
-			else
-			{
-				printf("\nInvalid!");
-				fordelay(1000000000);
-				system("cls");
-				goto login_try;
-			}
+    {   
+		system("cls");
+		system("color 4");
+		title();
+		cout << "\n\t\t\t\t BANK RECORD SYSTEM";
+    	cout << "\n\n\t\t\t\t EMPLOYEE PORTAL\n";
+		printf("\n\n\t\t\t Wrong password or Emplyoee Id!!");
+		retry("employee");
     }
 }
-
+// -> It provide menu for employee, to perform few operations.
 void menu_e()
 {
 	int choice;
     Bank B;
-    menu:
     system("cls");
-    system("color 2");
-	cout << "\n\n\t\t\t\t BANK RECORD SYSTEM";
-    cout << "\n\n\n\t\t\t\xB2\xB2\xB2\xB2\xB2\xB2\xB2 WELCOME "
-		 << "TO THE MAIN MENU \xB2\xB2\xB2\xB2\xB2\xB2\xB2";
-    cout << "\n\n\t\t\t Employee Menu";
-	cout << "\n\t\t 1.Check the details of existing account\n";
-    cout << "\t\t 2.Display All Account Holder Name\n";
-	cout << "\t\t 3.Exit";
-	cout << "\n\n\n\n\n\t\t Enter your choice: ";
+    system("color D");
+	title();
+	cout << "\n\t\t\t\t BANK RECORD SYSTEM";
+    cout << "\n\n\t\t\t\t EMPLOYEE PORTAL\n";
+	cout << "\t\t <1> Account Summary\n";
+    cout << "\t\t <2> Display All Account Holder Name\n";
+	cout << "\t\t <3> Back to Home Page\n";
+	cout << "\t\t <4> Logout\n";
+	cout << "\t\t <0> Exit\n";
+	cout << "\n\t\t Enter your choice: ";
     cin >> choice;
     system("cls");
     switch(choice)
     {
         case 1:	B.search_rec();		break;
         case 2: B.display_all();	break;
-        case 3:	close();			break;
-        default: cout<<"Invalid Input!\n";
-        		cout<<"   Try Again\n";
-				goto menu;
+		case 3: main();				break;
+		case 4: employee();			break;
+        case 0:	close();			break;
+        default:
+			system("color 9");
+			cout<<"Invalid Input!\n";
+			retry("employee");
     }
-	login_try:
-           	cout << "\n\n\tEnter \n\t\t 1. Try Again! \n\t\t 2. Main Menu \n\t\t 0. Exit \n\t\t\t : ";
-            scanf("%d",&main_exit);
-			
-			if (main_exit==1)
-			{
-				system("cls");
-				employee();
-			}
-			else if (main_exit==0)
-			{
-				system("cls");
-				close();
-			}
-			else if (main_exit == 2)
-			{
-				system("cls");
-				main();
-			}
-			else
-			{
-				printf("\nInvalid!");
-				fordelay(1000000000);
-				system("cls");
-				goto login_try;
-			}
-        
 }
-
+// -> It provide access to the customer menu after inputting correct Employee Id and Password for the existing user and direct access to the new user.
 void customer()
 {
 	char pass[10];
     char c;
     string s, name, acc_no, password;
-    int i=0,x;
-    system("cls");
-    cout << "\n\n\t\t\t MENU\n";
-    cout << "\t\t 1. New Customer\n";
-    cout << "\t\t 2. Existing Customer\n";
-    cout << "\t\t Enter Your Choice : ";
-    cin >> x;
-    if(x == 1)		menu_c();
-    else
-    {
-    	cout << "\n\n\t\tFor Security Purpose:";
-    	cout << "\n\n\t\tEnter the Login Customer Id:";
-    	cin >> name;
-    	cout << "\n\n\t\tEnter the password to login:";
-    	while(1)
-		{
-    		c=getch();
-        	printf("*");
-        	s += c;
-    		if(c=='\r')       break; 
-		}   	
-	}
- 	s = s.substr(0, s.size()-1);
-    cout << endl;
-    
-	ifstream is("Account_info.csv");
-    do
-    {
-       	getline(is,acc_no, ',');
-       	getline(is,password, '\n');
-       	if(acc_no == name)
-    	{
-    		i = 1;
-    		if(password == s)
-    		printf("\n\n Access Granted!\n LOADING");
-        	for(i=0;i<=6;i++)
-        	{
-            	fordelay(100000000);
-            	printf(".");
-        	}
-            system("cls");
-            menu_c();
-    	}
-    } while(is.good());
-    	
-	if(i == 0)
-   	{   
-			printf("\n\nWrong password or Customer Id!!");
-		login_try:
-           	cout << "\n\n\tEnter \n\t\t 1. Try Again! \n\t\t 2. Main Menu \n\t\t 0. Exit \n\t\t\t : ";
-            scanf("%d",&main_exit);
-			
-			if (main_exit==1)
-			{
-				system("cls");
-				employee();
-			}
-			else if (main_exit==0)
-			{
-				system("cls");
-				close();
-			}
-			else if (main_exit == 2)
-			{
-				system("cls");
-				main();
-			}
-			else
-			{
-				printf("\nInvalid!");
-				fordelay(1000000000);
-				system("cls");
-				goto login_try;
-			}   
-	}
-}
+    int choice;
+	bool check = false;
+	system("cls");
+	system("color 6");
+	title ();
+	cout << "\n\t\t\t\t BANK RECORD SYSTEM";
+	cout << "\n\n\t\t\t\t CUSTOMER PORTAL \n\n";
+	cout << "\t\t\t <1> New Customer\n";
+	cout << "\t\t\t <2> Existing Customer\n";
+	cout << "\t\t\t <3> Return to Home Page\n";
+	cout << "\t\t\t <4> Exit\n";
+	cout << "\n\t\t Enter Your Choice : ";
+	cin >> choice;
 
+	switch(choice)
+	{
+	case 1:	menu_c();		break;
+	case 2: 
+	{
+		system("cls");
+		system("color 6");
+		title ();
+		cout << "\n\t\t\t\t BANK RECORD SYSTEM";
+		cout << "\n\n\t\t\t\t CUSTOMER PORTAL \n";
+		cout << "\n\n\t\t For Security Reasons\n";
+		cout << "\t\t\t Enter your name: ";
+		cin >> name;
+		cout << "\n\t\t\t Enter the password: ";
+		while(1)
+		{
+			c = getch();
+			printf("*");
+				s += c;
+				if(c == '\r')       break; 
+			}   	
+	
+			s = s.substr(0, s.size()-1);
+			cout << endl;
+	
+			ifstream is("Account_info.csv");
+			do
+			{
+				getline(is,acc_no, ',');
+				getline(is,password, '\n');
+				if(acc_no == name)
+				{
+					if(password == s)
+						check = true;
+						printf("\n\n Access Granted!\n LOADING");
+						for(int i = 0; i <= 6; i++)
+						{
+							fordelay(100000000);
+							printf(".");
+						}
+					system("cls");
+					menu_c();
+				}
+			} while(is.good());
+		
+			if(check == false)
+			{   
+				system("color 4");
+				printf("\n\n\t\tWrong password or Customer Id!!");
+				retry("customer");
+			}
+		break;
+	}
+	case 3:	main();			break;
+	case 4: close();		break;
+	default:
+		system("cls");
+		system("color 4");
+		title ();
+		cout << "\n\t\t\t\t BANK RECORD SYSTEM";
+		cout << "\n\n\t\t\t\t CUSTOMER PORTAL \n\n";
+		cout << "\t\tInvalid Input! Try Again";
+		for(int i = 0; i < 6; i++)
+    	{
+        	fordelay(100000000);
+        	printf(".");
+    	}
+		retry("customer");
+	};
+	
+}
+// -> It provide menu for customer, to perform few operations
 void menu_c(void)
 {
 	int choice;
     Bank B;
-    menu:
-    system("cls");
-    system("color 2");
-	cout << "\n\n\t\t\t BANK RECORD SYSTEM";
-    cout << "\n\n\n\t\t\t\xB2\xB2\xB2\xB2\xB2\xB2\xB2 WELCOME"
-		 << " TO THE MAIN MENU \xB2\xB2\xB2\xB2\xB2\xB2\xB2";
-    cout << "\n\n\t\t 1.Create new account\n";
-    cout << "\t\t 2.Update information of existing account\n";
-    cout << "\t\t 3.For transactions\n";
-    cout << "\t\t 4.Check the details of existing account\n";
-    cout << "\t\t 5.For Transfer\n";
-    cout << "\t\t 6.Exit\n";
-	cout << "\n\n\n\n\t\t Enter your choice: ";
-    cin >> choice;
+	system("cls");
+	system("color 6");
+	title();
+	cout << "\n\n\t\t\t\t BANK RECORD SYSTEM";
+    cout << "\n\n\t\t\t CUSTOMER PORTAL\n";
+	cout << "\n\t\t\t <1> Create new account\n";
+	cout << "\t\t\t <2> Update information of existing account\n";
+	cout << "\t\t\t <3> For transactions\n";
+	cout << "\t\t\t <4> Check the details of existing account\n";
+	cout << "\t\t\t <5> For Transfer\n";
+	cout << "\t\t\t <6> Exit\n";
+	cout << "\n\t\t Enter your choice: ";
+	cin >> choice;
 
-    system("cls");
-    switch(choice)
-    {
-        case 1:	B.acc_write();			break;
-        case 2:	B.modify_account();		break;
-    	case 3:	B.deposit_withdraw();	break;
-        case 4:	B.search_rec();			break;
-        case 5:	B.transfer();			break;
-        case 6:	close();				break;
-    }
-
-	login_try:
-        cout << "\n\n\tEnter \n\t\t 1. Try Again! \n\t\t 2. Main Menu \n\t\t 0. Exit \n\t\t\t : ";
-        scanf("%d",&main_exit);
-		
-		if (main_exit == 1)
-		{
-			system("cls");
-			employee();
-		}
-		else if (main_exit == 0)
-		{
-			system("cls");
-			close();
-		}
-		else if (main_exit == 2)
-		{
-			system("cls");
-			main();
-		}
-		else
-		{
-			printf("\nInvalid!");
-			fordelay(1000000000);
-			system("cls");
-			goto login_try;
-		}
+	system("cls");
+	switch(choice)
+	{
+		case 1:	B.acc_write();			break;
+		case 2:	B.modify_account();		break;
+		case 3:	B.deposit_withdraw();	break;
+		case 4:	B.search_rec();			break;
+		case 5:	B.transfer();			break;
+		case 6:	close();				break;
+		default:
+			system("color 4"); 
+			cout<<"Invalid Input!\n";
+			retry("customer");
+	}
 }
-
+// ->  It involves the option for employee and customer. 
 int main()
 {
 	int ch, i;
-	cout << "\n\n\n\n\n\t\t\t\tWelcome to our bank System";
-	for(i=0;i<6;i++)
+	system("cls");
+	system("color 7");
+	title();
+	cout << "\n\n\t\t\t###### WELCOME TO SWISS BANK SYSTEM ######";
+	cout << "\n\n\t\t\t Loading";
+	for(i = 0; i < 6; i++)
     {
         fordelay(100000000);
         printf(".");
     }
 	menu:
 		system("cls");
-		system("color 4");
-		cout << "\t\t\t//////////////////////"<<endl;
-		cout << "\t\t\t//    SWISS BANK    //"<<endl;
-		cout << "\t\t\t//////////////////////"<<endl;
 		system("color 3");
-		cout << "\n\n\t\t\t\t MENU\n";
-		cout << "\t\t 1. Employee\n";
-		cout << "\t\t 2. Customer\n";
-		cout << "\t\t 3. Exit\n";
-		cout << "\n\t\tEnter Your Choice: ";
+		title();
+		cout << "\n\t\t\t\t     OPTIONS \n\n";
+		cout << "\t\t\t <1> Employee Portal\n";
+		cout << "\t\t\t <2> Customer Portal\n";
+		cout << "\t\t\t <3> Exit\n";
+		cout << "\n\t\t Enter Your Choice: ";
 		cin >> ch;
+
 		switch(ch)
 		{
 			case 1: employee();			break;
 			case 2: customer();			break;
 			case 3: close();			break;
 			default :	
-				cout << "Invalid Input! Try Again...\n";
+				cout << "\t\tInvalid Input! Try Again...\n";
 				fordelay(1000000000);
 				goto menu;
 		}
+}
+
+void retry(string person)
+{
+		login_try:
+
+           	cout << "\n\n\t\t <1> Try Again! \n\t\t <2> Home Page \n\t\t <0> Exit \n\n\t Enter your choice: ";
+            scanf("%d",&main_exit);
+			
+			if (main_exit==1)
+			{
+				system("cls");
+				if (person == "employee")	employee();
+				else if(person == "customer")	customer();
+			}
+			else if (main_exit==0)
+			{
+				system("cls");
+				close();
+			}
+			else if (main_exit == 2)
+			{
+				system("cls");
+				main();
+			}
+			else
+			{
+				printf("\nInvalid!");
+				fordelay(1000000000);
+				system("cls");
+				goto login_try;
+			}
+}
+
+void title()
+{
+	cout << "\t\t\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2 WELCOME TO SWISS BANK "
+	 	 << 	 "\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2" << endl;
 }
 
 // Programme Ends Here.
